@@ -52,9 +52,11 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
 
-  /* Coinbase Blue-ish */
-  --primary: oklch(0.60 0.20 255);
-  --primary-foreground: oklch(0.99 0 0);
+  --primary: oklch(0.7484 0.1822 155.8);
+
+  --primary-foreground: oklch(0.145 0 0);
+
+  --ring: oklch(0.7484 0.1822 155.8);
 
   --secondary: oklch(0.96 0.02 255);
   --secondary-foreground: oklch(0.22 0.03 255);
@@ -70,8 +72,6 @@
 
   --border: oklch(0.92 0.01 255);
   --input: oklch(0.92 0.01 255);
-
-  --ring: oklch(0.62 0.20 255);
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -98,8 +98,10 @@
   --popover: oklch(0.20 0.02 260);
   --popover-foreground: oklch(0.98 0 0);
 
-  --primary: oklch(0.72 0.18 255);
-  --primary-foreground: oklch(0.18 0.02 260);
+  --primary: oklch(0.80 0.18 155.8);
+  --primary-foreground: oklch(0.16 0.02 260);
+  --ring: oklch(0.80 0.18 155.8);
+
 
   --secondary: oklch(0.26 0.02 260);
   --secondary-foreground: oklch(0.98 0 0);
@@ -115,8 +117,6 @@
 
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
-
-  --ring: oklch(0.72 0.18 255);
 }
 
 @layer base {
