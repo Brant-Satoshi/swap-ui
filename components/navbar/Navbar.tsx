@@ -41,36 +41,29 @@ export default function Navbar() {
                 <Image src="/logo.svg" alt="Logo" width={30} height={30} />
             </Button>
 
-            <div
-                className="bg-gray-700 ml-4 px-4 py-2 cursor-pointer hover:text-primary rounded"
-            >
-                {
-                    isConnected ?
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <span className="hover:text-primary">{shortAddress}</span>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <div className="flex flex-col space-y-4">
-                                    {
-                                        isConnected ?
-                                            <Button
-                                                variant="destructive"
-                                                onClick={() => disconnect()}
-                                            >
-                                                Disconnect
-                                            </Button> :
-                                            <div>
-                                                {/* Add your wallet connection options here */}
-                                                <p className="text-center">Wallet connection options go here.</p>
-                                            </div>
-                                    }
-                                </div>
-                            </DialogContent>
-                        </Dialog> :
-                        <ConnectButton />
-                }
-            </div>
+            <ConnectButton.Custom>
+                {({ account, chain, openConnectModal, openAccountModal }) => {
+                    if (account) {
+                        return (
+                            <Button
+                                className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
+                                onClick={openAccountModal}
+                            >
+                                { shortAddress}
+                            </Button>
+                        );
+                    } else {
+                        return (
+                            <Button
+                                className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
+                                onClick={openConnectModal}
+                            >
+                                Connect Wallet
+                            </Button>
+                        );
+                    }
+                }}
+            </ConnectButton.Custom>
         </div>
     </nav>;
 }
