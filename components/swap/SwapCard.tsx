@@ -4,6 +4,11 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Token, TokenSelect, defaultTokens } from "./TokenSelect";
 import { cn } from "@/lib/utils";
+import { useBalance, useChains, useConnection, useSwitchChain } from "wagmi";
+import { formatUnits } from "viem";
+import { Input } from "../ui/input";
+
+// decimals: number, raw: bigint
 
 type Chain = {
   key: string;
@@ -18,10 +23,19 @@ const chains: Chain[] = [
 ];
 
 export default function SwapCard() {
+  const { address, isConnected } = useConnection();
+  // const chains = useChains();
+  // console.log('chains', chains);
+  // const { switchChain, isPending } = useSwitchChain();
+
+  const { data, isLoading, error } = useBalance({
+    address,
+    query: { enabled: isConnected && !!address },
+  });
+  const shown = data?.value ? formatUnits(data.value, data.decimals) : "0";
   const [fromToken, setFromToken] = useState<Token>(defaultTokens[0]);
   const [toToken, setToToken] = useState<Token>(defaultTokens[1]);
   const [fromAmount, setFromAmount] = useState("");
-  const [toAmount, setToAmount] = useState("");
   const [fromChain] = useState<Chain>(chains[0]);
   const [toChain] = useState<Chain>(chains[1]);
 
@@ -38,13 +52,20 @@ export default function SwapCard() {
       <div className="relative space-y-4">
         <div className="flex items-center gap-3">
           <ChainCard chain={fromChain} />
-          <div className="flex size-8 items-center justify-center rounded-full bg-white/5 text-lg">→</div>
+          <div className="flex size-8 items-center justify-center rounded-full bg-white/5 text-lg" onClick={() => {
+
+          }}>→</div>
           <ChainCard chain={toChain} />
         </div>
 
         <div className="space-y-3 rounded-[24px] border border-white/10 bg-black/40 p-4">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-3xl font-extrabold text-white/30 sm:text-4xl">at least 0.1</p>
+            <Input
+              value={fromAmount}
+              onChange={(e) => setFromAmount(e.target.value)}
+              placeholder="at least 0.01"
+              className="flex-1 bg-transparent text-3xl font-bold placeholder-white/50 focus:ring-0 focus:ring-offset-0">
+              </Input>
             <div className="flex items-center gap-3">
               <TokenSelect
                 selected={fromToken}
@@ -55,9 +76,13 @@ export default function SwapCard() {
               />
             </div>
           </div>
-          <div className="flex justify-end text-xs text-white/60">
-            Available <span className="ml-1 font-semibold text-white">0.008000 {fromToken.symbol}</span>
-          </div>
+          {
+            isConnected && (
+              <div className="flex justify-end text-xs text-white/60">
+                Available <span className="ml-1 font-semibold text-white">{shown} {fromToken.symbol}</span>
+              </div>
+            )
+          }
         </div>
 
         <div className="space-y-3 rounded-[24px] border border-white/10 bg-black/40 p-4">

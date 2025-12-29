@@ -9,11 +9,7 @@ import { wagmiConfig } from "@/lib/wallet/config";
 
 const queryClient = new QueryClient();
 
-const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
-  <Text>
-    连接钱包即表示你同意 <Link href="/terms">Terms</Link> 并阅读 <Link href="/disclaimer">Disclaimer</Link>
-  </Text>
-)
+const NoDisclaimer = () => null;
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -31,7 +27,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             })} 
               appInfo={{
                 appName: 'CP Chain',
-                disclaimer: Disclaimer,
+                disclaimer: NoDisclaimer,
                 learnMoreUrl: 'https://your.site/learn',
           }}>
             {children}
