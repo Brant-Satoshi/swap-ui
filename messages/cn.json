@@ -1,0 +1,34 @@
+{
+  "Navbar": {
+    "home": "首页",
+    "mainnet": "主网",
+    "testnet": "测试网",
+    "swap": "兑换",
+    "bridge": "跨链桥",
+    "faucet": "水龙头",
+    "english": "英文",
+    "chinese": "中文",
+    "connectWallet": "连接钱包",
+    "menu": "菜单",
+    "language": "语言",
+    "lightMode": "浅色模式",
+    "darkMode": "深色模式"
+  },
+  "SwapPage": {
+    "title": "随时随地轻松跨链"
+  },
+  "SwapCard": {
+    "from": "从",
+    "to": "到",
+    "opTestnet": "Op 测试网",
+    "sepoliaTestnet": "Sepolia 测试网",
+    "amountPlaceholder": "至少 {amount}",
+    "available": "可用",
+    "fee": "手续费",
+    "eta": "3~10 分钟 ⏱️",
+    "enterValidAmount": "请输入有效金额",
+    "swapDirection": "切换方向",
+    "selectToken": "选择代币",
+    "searchToken": "搜索"
+  }
+}

@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/web3/useWallet";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -18,9 +20,17 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 export default function Navbar() {
     const { theme, setTheme } = useTheme();
     const { address, shortAddress, isConnected, chain, disconnect } = useWallet();
-    console.log(address, shortAddress, isConnected, chain, disconnect)
     const next = theme === "dark" ? "light" : "dark";
     const [navOpacity, setNavOpacity] = useState(0);
+    const t = useTranslations('Navbar');
+    const locale = useLocale();
+    const router = useRouter();
+
+    const handleLocaleChange = (newLocale: string) => {
+        if (newLocale === locale) return;
+        document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
+        router.refresh();
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -42,18 +52,18 @@ export default function Navbar() {
             <ul>
                 <HoverCard>
                     <HoverCardTrigger asChild>
-                        <li className="inline-block mx-4 cursor-pointer hover:text-primary">Home</li>
+                        <li className="inline-block mx-4 cursor-pointer hover:text-primary">{t('home')}</li>
                     </HoverCardTrigger>
                     <HoverCardContent className="w-40">
                         <div className="flex flex-col space-y-2 cursor-pointer hover:text-primary" onClick={() => {
                             window.open("https://explorer.cpchain.com/");
-                        }}>Mainnet</div>
-                        <div className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary">Testnet</div>
+                        }}>{t('mainnet')}</div>
+                        <div className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary">{t('testnet')}</div>
                     </HoverCardContent>
                 </HoverCard>
-                <li className="inline-block mx-4 cursor-pointer hover:text-primary">Swap</li>
-                <li className="inline-block mx-4 cursor-pointer hover:text-primary">Bridge</li>
-                <li className="inline-block mx-4 cursor-pointer hover:text-primary">Faucet</li>
+                <li className="inline-block mx-4 cursor-pointer hover:text-primary">{t('swap')}</li>
+                <li className="inline-block mx-4 cursor-pointer hover:text-primary">{t('bridge')}</li>
+                <li className="inline-block mx-4 cursor-pointer hover:text-primary">{t('faucet')}</li>
             </ul>
             <HoverCard>
                 <HoverCardTrigger asChild>
@@ -62,8 +72,18 @@ export default function Navbar() {
                     </Button>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-40">
-                    <div className="flex flex-col space-y-2 cursor-pointer hover:text-primary">English</div>
-                    <div className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary">Chinese</div>
+                    <div
+                        className="flex flex-col space-y-2 cursor-pointer hover:text-primary"
+                        onClick={() => handleLocaleChange("en")}
+                    >
+                        {t('english')}
+                    </div>
+                    <div
+                        className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary"
+                        onClick={() => handleLocaleChange("cn")}
+                    >
+                        {t('chinese')}
+                    </div>
                 </HoverCardContent>
             </HoverCard>
 
@@ -75,26 +95,60 @@ export default function Navbar() {
             </Button>
 
             <ConnectButton.Custom>
-                {({ account, chain, openConnectModal, openAccountModal }) => {
-                    if (account) {
+                {({
+                    account,
+                    chain,
+                    mounted,
+                    authenticationStatus,
+                    openConnectModal,
+                    openAccountModal,
+                    openChainModal
+                }) => {
+                    const ready = mounted && authenticationStatus !== "loading";
+                    const connected =
+                        ready &&
+                        account &&
+                        chain &&
+                        (!authenticationStatus || authenticationStatus === "authenticated");
+
+                    if (!ready) {
                         return (
-                            <Button
-                                className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
-                                onClick={openAccountModal}
-                            >
-                                {shortAddress}
+                            <Button className="bg-gray-700 px-4 py-2 rounded cursor-pointer" disabled>
+                                {t("connectWallet")}
                             </Button>
                         );
-                    } else {
+                    }
+
+                    if (!connected) {
                         return (
                             <Button
                                 className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
                                 onClick={openConnectModal}
                             >
-                                Connect Wallet
+                                {t("connectWallet")}
                             </Button>
                         );
                     }
+
+                    if (chain.unsupported) {
+                        return (
+                            <Button
+                                className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
+                                onClick={openChainModal}
+                            >
+                                {chain.name}
+                            </Button>
+                        );
+                    }
+
+                    return (
+                        <Button
+                            className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
+                            onClick={() => openAccountModal?.()}
+                        >
+                            {shortAddress || account.displayName}
+                        </Button>
+                    );
                 }}
             </ConnectButton.Custom>
         </div>
@@ -107,70 +161,114 @@ export default function Navbar() {
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                     <SheetHeader>
-                        <SheetTitle>Menu</SheetTitle>
+                        <SheetTitle>{t('menu')}</SheetTitle>
                     </SheetHeader>
                     <div className="flex flex-col space-y-4 mt-8">
                         <ul className="flex flex-col space-y-4">
                             <li>
                                 <Popover>
                                     <PopoverTrigger asChild>
-                                        <span className="cursor-pointer hover:text-primary">Home</span>
+                                        <span className="cursor-pointer hover:text-primary">{t('home')}</span>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-40">
                                         <div className="flex flex-col space-y-2 cursor-pointer hover:text-primary" onClick={() => {
                                             window.open("https://explorer.cpchain.com/");
-                                        }}>Mainnet</div>
-                                        <div className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary">Testnet</div>
+                                        }}>{t('mainnet')}</div>
+                                        <div className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary">{t('testnet')}</div>
                                     </PopoverContent>
                                 </Popover>
                             </li>
-                            <li className="cursor-pointer hover:text-primary">Swap</li>
-                            <li className="cursor-pointer hover:text-primary">Bridge</li>
-                            <li className="cursor-pointer hover:text-primary">Faucet</li>
+                            <li className="cursor-pointer hover:text-primary">{t('swap')}</li>
+                            <li className="cursor-pointer hover:text-primary">{t('bridge')}</li>
+                            <li className="cursor-pointer hover:text-primary">{t('faucet')}</li>
                         </ul>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="ghost" className="justify-start">
                                     <Image src="/language.png" alt="Logo" width={20} height={20} className="mr-2" />
-                                    Language
+                                    {t('language')}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-40">
-                                <div className="flex flex-col space-y-2 cursor-pointer hover:text-primary">English</div>
-                                <div className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary">Chinese</div>
+                                <div
+                                    className="flex flex-col space-y-2 cursor-pointer hover:text-primary"
+                                    onClick={() => handleLocaleChange("en")}
+                                >
+                                    {t('english')}
+                                </div>
+                                <div
+                                    className="flex mt-4 flex-col space-y-2 cursor-pointer hover:text-primary"
+                                    onClick={() => handleLocaleChange("cn")}
+                                >
+                                    {t('chinese')}
+                                </div>
                             </PopoverContent>
                         </Popover>
-...
+                        ...
 
                         <Button
                             className="bg-gray-700 px-4 py-2 rounded cursor-pointer flex justify-start"
                             onClick={() => setTheme(next)}
                         >
                             <Image src="/logo.svg" alt="Logo" width={30} height={30} className="mr-2" />
-                            {theme === 'dark' ? 'Light' : 'Dark'} Mode
+                            {theme === 'dark' ? t('lightMode') : t('darkMode')}
                         </Button>
 
                         <ConnectButton.Custom>
-                            {({ account, chain, openConnectModal, openAccountModal }) => {
-                                if (account) {
+                            {({
+                                account,
+                                chain,
+                                mounted,
+                                authenticationStatus,
+                                openConnectModal,
+                                openAccountModal,
+                                openChainModal
+                            }) => {
+                                const ready = mounted && authenticationStatus !== "loading";
+                                const connected =
+                                    ready &&
+                                    account &&
+                                    chain &&
+                                    (!authenticationStatus || authenticationStatus === "authenticated");
+
+                                if (!ready) {
                                     return (
-                                        <Button
-                                            className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
-                                            onClick={openAccountModal}
-                                        >
-                                            {shortAddress}
+                                        <Button className="bg-gray-700 px-4 py-2 rounded cursor-pointer" disabled>
+                                            {t("connectWallet")}
                                         </Button>
                                     );
-                                } else {
+                                }
+
+                                if (!connected) {
                                     return (
                                         <Button
                                             className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
                                             onClick={openConnectModal}
                                         >
-                                            Connect Wallet
+                                            {t("connectWallet")}
                                         </Button>
                                     );
                                 }
+
+                                if (chain.unsupported) {
+                                    return (
+                                        <Button
+                                            className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
+                                            onClick={openChainModal}
+                                        >
+                                            {chain.name}
+                                        </Button>
+                                    );
+                                }
+
+                                return (
+                                    <Button
+                                        className="bg-gray-700 px-4 py-2 rounded cursor-pointer"
+                                        onClick={() => openAccountModal?.()}
+                                    >
+                                        {shortAddress || account.displayName}
+                                    </Button>
+                                );
                             }}
                         </ConnectButton.Custom>
                     </div>

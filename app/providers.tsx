@@ -6,12 +6,21 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { darkTheme, DisclaimerComponent, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { ThemeProvider } from "next-themes";
 import { wagmiConfig } from "@/lib/wallet/config";
+import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 
 const queryClient = new QueryClient();
 
 const NoDisclaimer = () => null;
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  locale,
+  messages
+}: {
+  children: React.ReactNode;
+  locale: string;
+  messages: AbstractIntlMessages;
+}) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <WagmiProvider config={wagmiConfig}>
@@ -30,7 +39,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 disclaimer: NoDisclaimer,
                 learnMoreUrl: 'https://your.site/learn',
           }}>
-            {children}
+             <NextIntlClientProvider locale={locale} messages={messages}>
+               {children}
+             </NextIntlClientProvider>
           </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>
