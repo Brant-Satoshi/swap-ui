@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "@/components/navbar/Navbar";
+import Navbar from "@/src/components/navbar/Navbar";
 import { Providers } from "./providers";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
@@ -32,8 +32,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased
-        bg-gradient-to-br dark:from-black dark:via-zinc-900 dark:to-indigo-950`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers locale={locale} messages={messages}>
           <Navbar />

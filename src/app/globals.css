@@ -125,5 +125,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: url("/faucet_bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    background-color: #121212;
   }
 }

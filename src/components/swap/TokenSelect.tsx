@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/src/components/ui/button";
+import { cn } from "@/src/lib/utils";
 import { useMemo, useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/src/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 export type Token = {
@@ -25,18 +25,18 @@ export const defaultTokens: Token[] = [
     icon: "/coin/eth.png",
   },
   {
-    symbol: "USDC",
-    name: "USD Coin",
-    chain: "Ethereum",
-    color: "from-sky-400 to-blue-500",
-    icon: "/coin/usdc.svg",
-  },
-  {
     symbol: "USDT",
     name: "Tether",
     chain: "Ethereum",
     color: "from-emerald-400 to-teal-500",
     icon: "/coin/usdt.png",
+  },
+  {
+    symbol: "CP",
+    name: "CP",
+    chain: "Ethereum",
+    color: "from-emerald-400 to-teal-500",
+    icon: "/coin/cp.png",
   },
 ];
 
@@ -46,10 +46,8 @@ type TokenSelectProps<T> = {
   onSelect: (item: T) => void;
   getKey: (item: T) => string;
   getLabel: (item: T) => string;
-  getSublabel?: string | undefined;
+  getSublabel?: (item: T) => string | undefined;
   getIcon?: (item: T) => string | undefined;
-  getAvatarText?: (item: T) => string;
-  getAvatarColor?: (item: T) => string | undefined;
   title?: string;
   searchPlaceholder?: string;
   align?: "start" | "center" | "end";
@@ -67,8 +65,6 @@ export function TokenSelect<T>({
   getLabel,
   getSublabel,
   getIcon,
-  getAvatarText,
-  getAvatarColor,
   title = "Select",
   searchPlaceholder = "Search",
   className,
@@ -77,8 +73,17 @@ export function TokenSelect<T>({
   triggerAsChild = false,
 }: TokenSelectProps<T>) {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const selectedKey = getKey(selected);
-  const options = useMemo(() => items, [items]);
+  const options = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return items;
+    return items.filter((item) => {
+      const label = getLabel(item).toLowerCase();
+      const sublabel = getSublabel?.(item)?.toLowerCase();
+      return label.includes(normalized) || (sublabel?.includes(normalized) ?? false);
+    });
+  }, [getLabel, getSublabel, items, query]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -87,15 +92,11 @@ export function TokenSelect<T>({
           renderTrigger ? (
             renderTrigger(selected)
           ) : (
-            <button type="button" className={cn("flex items-center", className)}>
-              <SelectPill
-                item={selected}
-                getLabel={getLabel}
-                getIcon={getIcon}
-                getAvatarText={getAvatarText}
-                getAvatarColor={getAvatarColor}
-              />
-            </button>
+            <SelectPill
+              item={selected}
+              getLabel={getLabel}
+              getIcon={getIcon}
+            />
           )
         ) : (
           <Button
@@ -112,8 +113,6 @@ export function TokenSelect<T>({
                 item={selected}
                 getLabel={getLabel}
                 getIcon={getIcon}
-                getAvatarText={getAvatarText}
-                getAvatarColor={getAvatarColor}
               />
             )}
           </Button>
@@ -128,6 +127,8 @@ export function TokenSelect<T>({
         <DialogTitle className="text-2xl font-semibold text-white">{title}</DialogTitle>
         <Input
           placeholder={searchPlaceholder}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
           className="h-12 rounded-full border-white/10 bg-white/5 px-5 text-base text-white placeholder:text-white/40 focus-visible:ring-0"
         />
         <div className="space-y-3">
@@ -135,7 +136,7 @@ export function TokenSelect<T>({
             const key = getKey(item);
             const isSelected = key === selectedKey;
             const label = getLabel(item);
-            const sublabel = getSublabel;
+            const sublabel = getSublabel?.(item);
             return (
             <button
               key={key}
@@ -151,8 +152,6 @@ export function TokenSelect<T>({
               <SelectAvatar
                 label={label}
                 icon={getIcon?.(item)}
-                text={getAvatarText?.(item)}
-                color={getAvatarColor?.(item)}
               />
               <div className="flex flex-1 flex-col">
                 <span className="text-base font-semibold text-white">{label}</span>
@@ -174,22 +173,16 @@ function SelectPill<T>({
   item,
   getLabel,
   getIcon,
-  getAvatarText,
-  getAvatarColor,
 }: {
   item: T;
   getLabel: (item: T) => string;
   getIcon?: (item: T) => string | undefined;
-  getAvatarText?: (item: T) => string;
-  getAvatarColor?: (item: T) => string | undefined;
 }) {
   return (
     <div className="flex w-full items-center gap-2">
       <SelectAvatar
         label={getLabel(item)}
         icon={getIcon?.(item)}
-        text={getAvatarText?.(item)}
-        color={getAvatarColor?.(item)}
         sizeClassName="size-7 text-[10px]"
       />
       <span className="text-sm font-semibold">{getLabel(item)}</span>
