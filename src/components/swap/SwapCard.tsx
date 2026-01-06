@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/src/components/ui/button";
 import { Token, TokenSelect, defaultTokens } from "./TokenSelect";
 import { useBalance, useConnection, useReadContract } from "wagmi";
@@ -36,6 +36,9 @@ export default function SwapCard() {
   const [fromChain, setFromChain] = useState<Chain>(CHAINS[0]);
   const [toChain, setToChain] = useState<Chain>(CHAINS[1]);
 
+  useEffect(() => {
+    
+  }, [fromToken.chain]);
   const { data, isLoading, error } = useBalance({
     address: address,
     query: { enabled: isConnected && !!address },

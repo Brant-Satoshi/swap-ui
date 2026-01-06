@@ -8,7 +8,8 @@ import {
   trustWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { arbitrum, mainnet, optimism, polygon } from "wagmi/chains";
+import { http } from "viem";
+import { arbitrum, mainnet, optimism, polygon, sepolia } from "wagmi/chains";
 
 const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
 if (!projectId) throw new Error("Missing NEXT_PUBLIC_WC_PROJECT_ID");
@@ -32,6 +33,11 @@ export const wagmiConfig = getDefaultConfig({
       ],
     },
   ],
+  transports: {
+    [mainnet.id]: http(),
+    [optimism.id]: http(),
+    [sepolia.id]: http(),
+  }
 });
 
 export enum ChainId {
