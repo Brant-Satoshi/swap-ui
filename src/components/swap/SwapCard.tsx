@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/src/components/ui/button";
 import { Token, TokenSelect, defaultTokens } from "./TokenSelect";
-import { useBalance, useConnection, useReadContract } from "wagmi";
+import { useAccount, useBalance, useChainId, useConnection, useReadContract } from "wagmi";
 import { formatUnits } from "viem";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
@@ -28,17 +28,16 @@ export default function SwapCard() {
   // console.log("feeIsLoading", feeIsLoading);
   // console.log("feeData", feeData);
 
-  
-  
   const [fromToken, setFromToken] = useState<Token>(defaultTokens[0]);
   const [toToken, setToToken] = useState<Token>(defaultTokens[1]);
   const [fromAmount, setFromAmount] = useState("");
   const [fromChain, setFromChain] = useState<Chain>(CHAINS[0]);
   const [toChain, setToChain] = useState<Chain>(CHAINS[1]);
 
-  useEffect(() => {
-    
-  }, [fromToken.chain]);
+  const { chain } = useAccount()
+  const chainId = useChainId()
+  console.log('wagmi chain:', chain?.id, chain?.name, 'chainId:', chainId)
+
   const { data, isLoading, error } = useBalance({
     address: address,
     query: { enabled: isConnected && !!address },
@@ -52,6 +51,11 @@ export default function SwapCard() {
     if (Number.isNaN(numeric) || numeric === 0) return "1.0000";
     return (numeric * 1).toFixed(4);
   }, [fromAmount]);
+
+  // const initBridgeBalance = () => {
+  //   if (!isConnected || !address) return;
+
+  // }
 
   const handleSwapSides = () => {
     setFromToken(toToken);
@@ -132,7 +136,7 @@ export default function SwapCard() {
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
               placeholder={t("amountPlaceholder", { amount: 0.01 })}
-              className="h-16 w-full min-w-0 flex-1 bg-transparent text-3xl font-bold leading-[3.5rem] placeholder:text-base placeholder:leading-[3.5rem] placeholder-white/50 sm:placeholder:text-3xl md:text-3xl md:leading-[5rem] md:placeholder:leading-[5rem]"
+              className="h-16 w-full min-w-0 flex-1 bg-transparent text-3xl font-bold leading-[3.5rem] placeholder:leading-[3.5rem] placeholder-white/50 sm:placeholder:text-3xl md:text-3xl md:leading-[5rem] md:placeholder:leading-[5rem] dark:bg-transparent dark:border-transparent"
             />
             <div className="flex items-center gap-3">
               <TokenSelect
@@ -188,9 +192,9 @@ function ChainCard({ chain, label }: { chain: Chain, label: string }) {
   return (
     <div className="flex flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
       <Image src={`/${chain.img}`} alt={chain.name} width={32} height={32} className="rounded-full" />
-      <div className="flex flex-col leading-tight">
-        <span className="text-xs text-white/60">{label}</span>
-        <span className="text-xs font-semibold text-white sm:text-sm">{chain.name}</span>
+      <div className="flex min-w-0 flex-col leading-tight">
+        <span className="truncate text-xs text-white/60">{label}</span>
+        <span className="truncate text-xs font-semibold text-white sm:text-sm">{chain.name}</span>
       </div>
     </div>
   );

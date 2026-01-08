@@ -17,7 +17,7 @@ if (!projectId) throw new Error("Missing NEXT_PUBLIC_WC_PROJECT_ID");
 export const wagmiConfig = getDefaultConfig({
   appName: "CP Chain",
   projectId,
-  chains: [mainnet, polygon, optimism, arbitrum],
+  chains: [mainnet, sepolia, polygon, optimism, arbitrum],
   ssr: true,
   wallets: [
     {
@@ -37,6 +37,8 @@ export const wagmiConfig = getDefaultConfig({
     [mainnet.id]: http(),
     [optimism.id]: http(),
     [sepolia.id]: http(),
+    [polygon.id]: http(),
+    [arbitrum.id]: http(),
   }
 });
 
