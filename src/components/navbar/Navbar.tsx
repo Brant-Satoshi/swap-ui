@@ -6,15 +6,15 @@ import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
-} from "@/src/components/ui/hover-card"
-import { Button } from "@/src/components/ui/button";
-import { useWallet } from "@/src/hooks/web3/useWallet";
+} from "@/components/ui/hover-card"
+import { Button } from "@/components/ui/button";
+import { useWallet } from "@/hooks/web3/useWallet";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/src/components/ui/popover";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/src/components/ui/sheet";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Navbar() {
     const { address, shortAddress, isConnected, chain, disconnect } = useWallet();

@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { Check } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
-import { cn } from "@/src/lib/utils";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
-import { Input } from "@/src/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 export type Token = {

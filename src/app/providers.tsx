@@ -5,7 +5,7 @@ import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { ThemeProvider } from "next-themes";
-import { wagmiConfig } from "@/src/lib/wallet/config";
+import { wagmiConfig } from "@/lib/wallet/config";
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 
 const queryClient = new QueryClient();

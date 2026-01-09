@@ -1,4 +1,4 @@
-import SwapCard from "@/src/components/swap/SwapCard";
+import SwapCard from "@/components/swap/SwapCard";
 import { useTranslations } from "next-intl";
 
 export default function Home() {

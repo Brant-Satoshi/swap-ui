@@ -2,16 +2,15 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { SpinnerCustom as Spinner } from "@/components/ui/spinner";
 import { Token, TokenSelect, defaultTokens } from "./TokenSelect";
 import { useAccount, useBalance, useChainId, useConnection, useReadContract } from "wagmi";
-import { formatUnits } from "viem";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
-import { CHAINS, Chain } from "@/src/lib/wallet/config";
-import bridgeAbi from "@/public/abi/bridgeABI.json";
-
-const BRIDGE_SEPOLIA = "0x26FF133bAC77404Fb87BFB0ce712AFdf1F41d1BE" as const;
+import { CHAINS, Chain } from "@/lib/wallet/config";
+import { roundTo2 } from "@/lib/utils";
+import bridgeABI from '../../../public/abi/bridgeABI.json'
 // decimals: number, raw: bigint
 
 export default function SwapCard() {
@@ -19,11 +18,10 @@ export default function SwapCard() {
   const { address, isConnected } = useConnection();
   // const { switchChain, isPending } = useSwitchChain();
   // const { data: feeData, isLoading: feeIsLoading, error: feeError } = useReadContract({
-  //   address: BRIDGE_SEPOLIA,
-  //   abi: bridgeAbi,
+  //   address,
+  //   abi: bridgeABI,
   //   functionName: "IsSupportedChainId",
-  //   // args: [11155420], // OP TestNet
-  //   chainId: 11155111, // 可选：强制用哪条链读（当你多链时很有用）
+  //   args: [11155420], // OP TestNet
   // });
   // console.log("feeIsLoading", feeIsLoading);
   // console.log("feeData", feeData);
@@ -43,7 +41,14 @@ export default function SwapCard() {
     query: { enabled: isConnected && !!address },
   });
   console.log('data', data);
-  const shown = data?.value ? formatUnits(data.value, data.decimals) : "0";
+  const shown = data?.value ? roundTo2(data.value, data.decimals) : "0";
+  const { data: balanceData, isLoading: balanceIsLoading, error: balanceError } = useBalance({
+    address,
+    chainId: 11155420, // 从 CHAINS 里拿
+    query: { enabled: isConnected && !!address },
+  })
+  console.log('balanceData', balanceData);
+
 
   const impliedRate = useMemo(() => {
     if (!fromAmount) return "1.0000";
@@ -156,7 +161,12 @@ export default function SwapCard() {
           {
             isConnected && (
               <div className="flex justify-end text-xs text-white/60">
-                {t("available")} <span className="ml-1 font-semibold text-white">{shown} {fromToken.symbol}</span>
+                {t("available")} 
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <span className="ml-1 font-semibold text-white">{shown} {fromToken.symbol}</span>
+                )}
               </div>
             )
           }
@@ -197,11 +207,5 @@ function ChainCard({ chain, label }: { chain: Chain, label: string }) {
         <span className="truncate text-xs font-semibold text-white sm:text-sm">{chain.name}</span>
       </div>
     </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <span className="inline-flex h-4 w-4 animate-spin items-center justify-center rounded-full border-[2px] border-white/30 border-t-transparent" />
   );
 }

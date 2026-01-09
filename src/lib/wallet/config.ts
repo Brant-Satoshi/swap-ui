@@ -9,7 +9,7 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { http } from "viem";
-import { arbitrum, mainnet, optimism, polygon, sepolia } from "wagmi/chains";
+import { arbitrum, mainnet, optimism, polygon, sepolia, optimismSepolia } from "wagmi/chains";
 
 const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
 if (!projectId) throw new Error("Missing NEXT_PUBLIC_WC_PROJECT_ID");
@@ -17,7 +17,7 @@ if (!projectId) throw new Error("Missing NEXT_PUBLIC_WC_PROJECT_ID");
 export const wagmiConfig = getDefaultConfig({
   appName: "CP Chain",
   projectId,
-  chains: [mainnet, sepolia, polygon, optimism, arbitrum],
+  chains: [mainnet, sepolia, polygon, optimismSepolia, optimism, arbitrum],
   ssr: true,
   wallets: [
     {
@@ -36,6 +36,7 @@ export const wagmiConfig = getDefaultConfig({
   transports: {
     [mainnet.id]: http(),
     [optimism.id]: http(),
+    [optimismSepolia.id]: http("https://eth-sepolia.g.alchemy.com/v2/afSCtxPWD3NE5vSjJm2GQ"),
     [sepolia.id]: http(),
     [polygon.id]: http(),
     [arbitrum.id]: http(),
