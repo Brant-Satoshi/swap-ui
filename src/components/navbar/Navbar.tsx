@@ -11,7 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/web3/useWallet";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -22,6 +23,12 @@ export default function Navbar() {
     const t = useTranslations('Navbar');
     const locale = useLocale();
     const router = useRouter();
+    const pathname = usePathname();
+    const basePath = `/${locale}`;
+    const navItems = [
+        { href: `${basePath}/swap`, label: t("swap") },
+        { href: `${basePath}/bridge`, label: t("bridge") },
+    ];
 
     const handleLocaleChange = (newLocale: string) => {
         if (newLocale === locale) return;
@@ -43,9 +50,25 @@ export default function Navbar() {
         className="sticky top-0 z-50 w-full h-16 flex items-center justify-between px-4 backdrop-blur transition-colors duration-200"
         style={{ backgroundColor: `rgba(0,0,0,${navOpacity})` }}
     >
-        <Image src="/logo.png" alt="Logo" width={128} height={30} />
+        <Link href={basePath} aria-label="CP Chain">
+            <Image src="/logo.png" alt="Logo" width={128} height={30} />
+        </Link>
 
-        <div className="flex ml-8 space-x-4 items-center justify-end flex-grow">
+        <div className="flex ml-8 space-x-6 items-center justify-end flex-grow">
+            <nav className="flex items-center gap-5 text-sm font-semibold text-white/70">
+                {navItems.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`transition hover:text-white ${isActive ? "text-white" : ""}`}
+                        >
+                            {item.label}
+                        </Link>
+                    );
+                })}
+            </nav>
             <HoverCard>
                 <HoverCardTrigger asChild>
                     <Image className="cursor-pointer hover:text-primary" src="/language.png" alt="Logo" width={20} height={20} />

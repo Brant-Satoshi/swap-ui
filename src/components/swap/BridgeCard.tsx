@@ -5,50 +5,17 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SpinnerCustom as Spinner } from "@/components/ui/spinner";
 import { Token, TokenSelect, defaultTokens } from "./TokenSelect";
-import { useAccount, useBalance, useChainId, useConnection, useReadContract } from "wagmi";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
 import { CHAINS, Chain } from "@/lib/wallet/config";
-import { roundTo2 } from "@/lib/utils";
-import bridgeABI from '../../../public/abi/bridgeABI.json'
-// decimals: number, raw: bigint
 
-export default function SwapCard() {
+export default function BridgeCard() {
   const t = useTranslations("SwapCard");
-  const { address, isConnected } = useConnection();
-  // const { switchChain, isPending } = useSwitchChain();
-  // const { data: feeData, isLoading: feeIsLoading, error: feeError } = useReadContract({
-  //   address,
-  //   abi: bridgeABI,
-  //   functionName: "IsSupportedChainId",
-  //   args: [11155420], // OP TestNet
-  // });
-  // console.log("feeIsLoading", feeIsLoading);
-  // console.log("feeData", feeData);
-
   const [fromToken, setFromToken] = useState<Token>(defaultTokens[0]);
   const [toToken, setToToken] = useState<Token>(defaultTokens[1]);
   const [fromAmount, setFromAmount] = useState("");
   const [fromChain, setFromChain] = useState<Chain>(CHAINS[0]);
   const [toChain, setToChain] = useState<Chain>(CHAINS[1]);
-
-  const { chain } = useAccount()
-  const chainId = useChainId()
-  console.log('wagmi chain:', chain?.id, chain?.name, 'chainId:', chainId)
-
-  const { data, isLoading, error } = useBalance({
-    address: address,
-    query: { enabled: isConnected && !!address },
-  });
-  console.log('data', data);
-  const shown = data?.value ? roundTo2(data.value, data.decimals) : "0";
-  const { data: balanceData, isLoading: balanceIsLoading, error: balanceError } = useBalance({
-    address,
-    chainId: 11155420, // 从 CHAINS 里拿
-    query: { enabled: isConnected && !!address },
-  })
-  console.log('balanceData', balanceData);
-
 
   const impliedRate = useMemo(() => {
     if (!fromAmount) return "1.0000";
@@ -56,11 +23,6 @@ export default function SwapCard() {
     if (Number.isNaN(numeric) || numeric === 0) return "1.0000";
     return (numeric * 1).toFixed(4);
   }, [fromAmount]);
-
-  // const initBridgeBalance = () => {
-  //   if (!isConnected || !address) return;
-
-  // }
 
   const handleSwapSides = () => {
     setFromToken(toToken);
@@ -88,7 +50,7 @@ export default function SwapCard() {
   };
 
   return (
-    <div className="relative w-full max-w-xl overflow-hidden rounded-[32px] border border-white/5 bg-[#0c0c0c] p-6 text-white shadow-2xl text-xs sm:text-base">
+    <div className="swap-panel-reveal relative w-full max-w-xl overflow-hidden rounded-[32px] border border-white/5 bg-[#1e1e1e] p-6 text-white shadow-2xl text-xs sm:text-base">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(99,102,241,0.05),_transparent_40%),_radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.05),_transparent_35%)]" />
       <div className="relative space-y-4">
         <div className="flex items-center gap-3">
@@ -135,7 +97,7 @@ export default function SwapCard() {
           />
         </div>
 
-        <div className="space-y-3 rounded-[24px] border border-white/10 bg-black/40 p-4">
+        <div className="space-y-3 rounded-[24px] border border-white/10 p-4">
           <div className="flex items-center justify-between gap-3">
             <Input
               value={fromAmount}
@@ -158,21 +120,13 @@ export default function SwapCard() {
               />
             </div>
           </div>
-          {
-            isConnected && (
-              <div className="flex justify-end text-xs text-white/60">
-                {t("available")} 
-                {isLoading ? (
-                  <Spinner />
-                ) : (
-                  <span className="ml-1 font-semibold text-white">{shown} {fromToken.symbol}</span>
-                )}
-              </div>
-            )
-          }
+          <div className="flex justify-end text-xs text-white/60">
+            {t("available")}
+            <span className="ml-1 font-semibold text-white">0.00 {fromToken.symbol}</span>
+          </div>
         </div>
 
-        <div className="space-y-3 rounded-[24px] border border-white/10 bg-black/40 p-4">
+        <div className="space-y-3 rounded-[24px] border border-white/10 p-4">
           <div className="flex items-center gap-3">
               <div className="flex flex-col leading-tightitems-center gap-2 text-xs sm:text-sm"> 
                 <Image src={`${fromToken.icon}`} alt={fromToken.symbol} width={32} height={32} className="inline-block rounded-full" />

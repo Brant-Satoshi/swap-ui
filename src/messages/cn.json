@@ -15,7 +15,9 @@
     "darkMode": "深色模式"
   },
   "SwapPage": {
-    "title": "随时随地轻松跨链"
+    "title": "随时随地轻松跨链",
+    "swapTitle": "在 CP Chain 上兑换",
+    "swapSubtitle": "在 CP Chain 上直接交易，体验简洁的兑换流程。"
   },
   "SwapCard": {
     "from": "从",
@@ -30,5 +32,14 @@
     "swapDirection": "切换方向",
     "selectToken": "选择代币",
     "searchToken": "搜索"
+  },
+  "SwapUi": {
+    "sell": "卖出",
+    "buy": "买入",
+    "balance": "余额: {amount}",
+    "slippageSetting": "滑点设置",
+    "slippageValue": "0.5 %",
+    "insufficientBalance": "余额不足",
+    "switchDirection": "切换方向"
   }
 }

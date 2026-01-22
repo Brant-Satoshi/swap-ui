@@ -1,15 +1,22 @@
-import SwapCard from "@/components/swap/SwapCard";
+import SwapPanel from "@/components/swap/SwapPanel";
+import TypingTitle from "@/components/swap/TypingTitle";
 import { useTranslations } from "next-intl";
 
-export default function Home() {
-  const t = useTranslations('SwapPage');
-  return (
-    <main className="relative flex min-h-screen w-full justify-center from-slate-50 via-white to-indigo-50 px-4 py-12">
-      <div className="relative flex w-full max-w-3xl flex-col items-center gap-10 text-center">
-        <h1 className="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">{t('title')}</h1>
+export default function SwapPage() {
+  const t = useTranslations("SwapPage");
 
+  return (
+    <main className="relative min-h-screen w-full overflow-hidden px-4 py-12 text-white">
+      <div className="pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto flex w-full max-w-4xl flex-col items-center gap-12">
+        <div className="space-y-3 text-center">
+          <TypingTitle
+            text={t("swapTitle")}
+            className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl"
+          />
+        </div>
         <section className="w-full max-w-xl">
-          <SwapCard />
+          <SwapPanel />
         </section>
       </div>
     </main>

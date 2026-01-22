@@ -15,7 +15,9 @@
     "darkMode": "Dark mode"
   },
   "SwapPage": {
-    "title": "Cross-chain anytime, anywhere, with ease."
+    "title": "Cross-chain anytime, anywhere, with ease.",
+    "swapTitle": "Swap on CP Chain",
+    "swapSubtitle": "Trade directly on CP Chain with a clean, minimal swap flow."
   },
   "SwapCard": {
     "from": "From",
@@ -30,5 +32,14 @@
     "swapDirection": "Swap direction",
     "selectToken": "Select Coin",
     "searchToken": "Search"
+  },
+  "SwapUi": {
+    "sell": "Sell",
+    "buy": "Buy",
+    "balance": "Balance: {amount}",
+    "slippageSetting": "Slippage setting",
+    "slippageValue": "0.5 %",
+    "insufficientBalance": "Insufficient balance",
+    "switchDirection": "Switch direction"
   }
 }

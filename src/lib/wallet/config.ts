@@ -8,16 +8,29 @@ import {
   trustWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { http } from "viem";
+import { defineChain, http } from "viem";
 import { arbitrum, mainnet, optimism, polygon, sepolia, optimismSepolia } from "wagmi/chains";
 
 const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
 if (!projectId) throw new Error("Missing NEXT_PUBLIC_WC_PROJECT_ID");
 
+export const cpChain = defineChain({
+  id: 86606,
+  name: 'CP Chain',
+  nativeCurrency: { name: 'CP Chain CP', symbol: 'CP', decimals: 18 }, // 按真实信息改
+  rpcUrls: {
+    default: { http: ['https://rpc-testnet.cpchain.com'] },
+    public:  { http: ['https://rpc-testnet.cpchain.com'] },
+  },
+  blockExplorers: {
+    default: { name: 'CP Chain Explorer', url: 'https://explorer-testnet.cpchain.com' }, // 可选
+  },
+})
+
 export const wagmiConfig = getDefaultConfig({
   appName: "CP Chain",
   projectId,
-  chains: [mainnet, sepolia, polygon, optimismSepolia, optimism, arbitrum],
+  chains: [mainnet, sepolia, polygon, optimismSepolia, optimism, arbitrum, cpChain],
   ssr: true,
   wallets: [
     {
@@ -40,6 +53,7 @@ export const wagmiConfig = getDefaultConfig({
     [sepolia.id]: http(),
     [polygon.id]: http(),
     [arbitrum.id]: http(),
+    [cpChain.id]: http("https://rpc-testnet.cpchain.com"),
   }
 });
 

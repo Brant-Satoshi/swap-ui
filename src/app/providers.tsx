@@ -4,6 +4,7 @@
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import type { Locale } from "@rainbow-me/rainbowkit";
 import { ThemeProvider } from "next-themes";
 import { wagmiConfig } from "@/lib/wallet/config";
 import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
@@ -21,12 +22,20 @@ export function Providers({
   locale: string;
   messages: AbstractIntlMessages;
 }) {
+  const localeMap: Record<string, Locale> = {
+    zh: "zh-CN",
+    "zh-HK": "zh-HK",
+    en: "en-US",
+    fr: "fr-FR",
+  };
+  const rainbowLocale: Locale = localeMap[locale] ?? "en-US";
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider
             modalSize="compact"
+            locale={rainbowLocale}
             theme={darkTheme({
               accentColor: '#00CE7A',
               accentColorForeground: 'black',
