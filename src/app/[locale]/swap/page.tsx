@@ -1,5 +1,6 @@
 import SwapPanel from "@/components/swap/SwapPanel";
 import TypingTitle from "@/components/swap/TypingTitle";
+import { get0xPrice } from "@/lib/wallet/get0xprice";
 import { useTranslations } from "next-intl";
 
 export default function SwapPage() {
@@ -12,7 +13,7 @@ export default function SwapPage() {
         <div className="space-y-3 text-center">
           <TypingTitle
             text={t("swapTitle")}
-            className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl"
+            className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl"
           />
         </div>
         <section className="w-full max-w-xl">
