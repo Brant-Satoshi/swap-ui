@@ -1,7 +1,7 @@
 // app/providers.tsx
 "use client";
 
-import { WagmiProvider } from "wagmi";
+import { WagmiConfig } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import type { Locale } from "@rainbow-me/rainbowkit";
@@ -31,7 +31,7 @@ export function Providers({
   const rainbowLocale: Locale = localeMap[locale] ?? "en-US";
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <WagmiProvider config={wagmiConfig}>
+      <WagmiConfig config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider
             modalSize="compact"
@@ -53,7 +53,7 @@ export function Providers({
              </NextIntlClientProvider>
           </RainbowKitProvider>
         </QueryClientProvider>
-      </WagmiProvider>
+      </WagmiConfig>
     </ThemeProvider>
   );
 }

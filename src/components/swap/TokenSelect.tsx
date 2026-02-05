@@ -14,6 +14,7 @@ export type Token = {
   chain: string;
   color: string;
   icon?: string;
+  address: string;
 };
 
 export const defaultTokens: Token[] = [
@@ -23,6 +24,7 @@ export const defaultTokens: Token[] = [
     chain: "Ethereum",
     color: "from-indigo-500 to-purple-500",
     icon: "/coin/eth.png",
+    address: "0x0000000000000000000000000000000000000000",
   },
   {
     symbol: "USDT",
@@ -30,6 +32,7 @@ export const defaultTokens: Token[] = [
     chain: "Ethereum",
     color: "from-emerald-400 to-teal-500",
     icon: "/coin/usdt.png",
+    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   },
   {
     symbol: "CP",
@@ -37,6 +40,7 @@ export const defaultTokens: Token[] = [
     chain: "Ethereum",
     color: "from-emerald-400 to-teal-500",
     icon: "/coin/cp.png",
+    address: "0x0000000000000000000000000000000000000000",
   },
 ];
 

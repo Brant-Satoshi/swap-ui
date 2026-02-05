@@ -1,10 +1,13 @@
 // app/hooks/useWallet.ts
 "use client";
-import { useConnection, useDisconnect } from "wagmi";
+import { useAccount, useChainId, useChains, useDisconnect } from "wagmi";
 
 export function useWallet() {
-  const { address, isConnected, chain } = useConnection();
-  const { mutate: disconnect } = useDisconnect();
+  const { address, isConnected } = useAccount();
+  const chainId = useChainId();
+  const chains = useChains();
+  const chain = chains.find((item) => item.id === chainId);
+  const { disconnect } = useDisconnect();
 
   const shortAddress =
     address && address.length > 10

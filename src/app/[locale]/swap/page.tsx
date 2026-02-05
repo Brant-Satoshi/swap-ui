@@ -1,6 +1,5 @@
 import SwapPanel from "@/components/swap/SwapPanel";
 import TypingTitle from "@/components/swap/TypingTitle";
-import { get0xPrice } from "@/lib/wallet/get0xprice";
 import { useTranslations } from "next-intl";
 
 export default function SwapPage() {

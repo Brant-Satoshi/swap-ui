@@ -36,10 +36,28 @@
   "SwapUi": {
     "sell": "卖出",
     "buy": "买入",
-    "balance": "余额: {amount}",
+    "balance": "余额:",
     "slippageSetting": "滑点设置",
     "slippageValue": "0.5 %",
     "insufficientBalance": "余额不足",
-    "switchDirection": "切换方向"
+    "switchDirection": "切换方向",
+    "connectWallet": "连接钱包",
+    "quoteLoading": "报价中...",
+    "quoteError": "报价失败",
+    "quoteHint": "请输入数量获取报价",
+    "priceLabel": "价格: {price}",
+    "impactLabel": "滑点影响: {impact}",
+    "quoteNoLiquidity": "流动性不足",
+    "quoteNetworkError": "网络错误",
+    "quoteRateLimit": "请求过于频繁",
+    "quoteInvalidPair": "交易对不可用",
+    "enterAmount": "请输入数量",
+    "approve": "授权",
+    "approving": "授权中...",
+    "swap": "兑换",
+    "swapping": "兑换中...",
+    "transactionSubmitted": "交易已提交",
+    "transactionConfirmed": "交易成功",
+    "transactionFailed": "交易失败"
   }
 }
